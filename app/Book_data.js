@@ -69,16 +69,18 @@ const Book = () => {
               <td className="col7" style={{ paddingLeft: '70px' }}>
                 <div className="btn-group mx-0" role="group" aria-label="Book Actions">
                   <button type="button" className="btn btn-success link-underline-light mx-2">
-                    Return
+                    return
                   </button>
                   <button type="button" className="btn btn-info mx-2">
-                    Issue
+                    issue
                   </button>
                   <button type="button" className="btn btn-warning mx-2">
-                     <Link href="/Update" className="book link-offset-2 link-underline link-underline-opacity-0">Updates</Link>
+                    <Link href={`/book_data/${current.Book_Id}`} className="book link-offset-2 link-underline link-underline-opacity-0">
+                      updates
+                    </Link>
                   </button>
                   <button type="button" className="btn btn-danger mx-2">
-                    Delete
+                    delete
                   </button>
                 </div>
               </td>
@@ -87,7 +89,7 @@ const Book = () => {
         </tbody>
       </table>
       <button type="button" className="btn btn-primary text-white mx-2">
-        <Link href="/AddBook" className="book link-offset-2 link-underline link-underline-opacity-0">Add</Link>
+        <Link href="/AddBook" className="book link-offset-2 link-underline link-underline-opacity-0">add</Link>
       </button>
     </div>
   );

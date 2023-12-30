@@ -10,12 +10,12 @@ function AddMember() {
       Name: '',
       Phone_No: ''
     });
-  
+
     const handleChange = (event) => {
       const { name, value } = event.target;
       setInputs((prevValues) => ({ ...prevValues, [name]: value }));
     };
-  
+
     const handleSubmit = (event) => {
       event.preventDefault();
       axios
@@ -27,7 +27,7 @@ function AddMember() {
           console.error('Error:', error);
         });
     };
-  
+
     return (
       <>
         <div className="AddBook">
@@ -79,6 +79,5 @@ function AddMember() {
       </>
     );
   }
-  
+
   export default AddMember;
-  
