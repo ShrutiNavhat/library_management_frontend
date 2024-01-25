@@ -4,24 +4,63 @@ import Link from 'next/link';
 import axios from 'axios';
 
 const Book = () => {
+  const [originalList, setOriginalList] = useState([]);
   const [list, setList] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
+    fetchBooks();
+  }, []);
+
+  const fetchBooks = () => {
     axios.get('http://127.0.0.1:5000/books/data')
       .then((response) => {
         const responseData = response.data.data; 
+        setOriginalList(responseData);
         setList(responseData);
       })
       .catch((error) => {
         console.error('Error fetching data:', error);
-      });
-  }, []);
+      });     
+  };
 
+  const handleSearch = (event) => {
+    event.preventDefault();
+    if (searchQuery.trim() !== '') {
+      const filteredList = originalList.filter((current) =>
+        current.Title.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setList(filteredList);
+    } else {
+      setList(originalList);
+    }
+  };
+
+  const handleDelete = (id) => {
+    axios.delete(`http://127.0.0.1:5000/books/delete/${id}`)
+      .then((response) => {
+        console.log(response.data.message);
+        setList(prevList => prevList.filter(book => book.Book_Id !== id));
+        setOriginalList(prevList => prevList.filter(book => book.Book_Id !== id));
+      })
+      .catch((error) => {
+        console.error('Error deleting book:', error);
+      });
+  };
   return (
     <div>
-      <form className="d-flex mx-auto mt-2" >
-        <input className="form-control me-2  " type="search" placeholder="Search" aria-label="Search" style={{marginButtom:'20'}}></input>
-        <button className="btn btn-outline-success" type="submit">Search</button>
+      <form className="d-flex mx-auto mt-2" onSubmit={handleSearch}>
+        <input
+          className="form-control me-2"
+          type="search"
+          placeholder="Search"
+          aria-label="Search"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+        <button className="btn btn-outline-success" type="submit">
+          Search
+        </button>
       </form>
       <table className="table caption-top">
         <caption>
@@ -72,14 +111,16 @@ const Book = () => {
                     return
                   </button>
                   <button type="button" className="btn btn-info mx-2">
-                    issue
+                    <Link href={`/Issue_book/${current.Book_Id}`} className="book link-offset-2 link-underline link-underline-opacity-0">
+                      issue
+                    </Link>
                   </button>
                   <button type="button" className="btn btn-warning mx-2">
                     <Link href={`/book_data/${current.Book_Id}`} className="book link-offset-2 link-underline link-underline-opacity-0">
                       updates
                     </Link>
                   </button>
-                  <button type="button" className="btn btn-danger mx-2">
+                  <button type="button" className="btn btn-danger mx-2" onClick={() => handleDelete(current.Book_Id)}>
                     delete
                   </button>
                 </div>

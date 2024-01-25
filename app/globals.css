@@ -49,6 +49,10 @@
     padding: 0px;
     border:solid 2px black;
   }
-  
+  .custom-select {
+    color:black;
+    background-color: white;
+  }
+ 
   
   

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 
+
 function UpdateBook({ params }) {
   const [bookData, setBookData] = useState(null);
 
@@ -27,7 +28,7 @@ function UpdateBook({ params }) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    
+
     if (bookData) {
       axios.put(`http://127.0.0.1:5000/books/update/${params.book_id}`, bookData)
         .then((response) => {
@@ -41,25 +42,26 @@ function UpdateBook({ params }) {
     }
   };
 
-  
   return (
     <>
       <div className="AddBook">
         <form className="d-flex flex-column mb-3" onSubmit={handleSubmit}>
-          <div className="form-group mb-3">            
-          <label htmlFor="Title" className="ml-2" style={{ marginBottom: '20px' }}>
+          {/* Title Input */}
+          <div className="form-group mb-3">
+            <label htmlFor="Title" className="ml-2" style={{ marginBottom: '20px' }}>
               Title
             </label>
-             <input
+            <input
               type="text"
               className="form-control"
               value={bookData?.Title || ''}
               id="Title"
               name="Title"
-              placeholder="Enter..."
+              placeholder={bookData?.Title}
               onChange={handleChange}
             />
           </div>
+          {/* Author Input */}
           <div className="form-group mb-3">
             <label htmlFor="Author" className="ml-2" style={{ marginBottom: '20px' }}>
               Author
@@ -70,10 +72,11 @@ function UpdateBook({ params }) {
               value={bookData?.Author || ''}
               id="Author"
               name="Author"
-              placeholder="Enter..."
+              placeholder={bookData?.Author}
               onChange={handleChange}
             />
           </div>
+          {/* Isbn_No Input */}
           <div className="form-group mb-3">
             <label htmlFor="Isbn_No" className="ml-2" style={{ marginBottom: '20px' }}>
               ISBN No
@@ -84,10 +87,11 @@ function UpdateBook({ params }) {
               value={bookData?.Isbn_No || ''}
               id="Isbn_No"
               name="Isbn_No"
-              placeholder="Enter..."
+              placeholder={bookData?.Isbn_No}
               onChange={handleChange}
             />
           </div>
+          {/* Quantity Input */}
           <div className="form-group mb-3">
             <label htmlFor="Quantity" className="ml-2" style={{ marginBottom: '20px' }}>
               Quantity
@@ -98,10 +102,11 @@ function UpdateBook({ params }) {
               value={bookData?.Quantity || ''}
               id="Quantity"
               name="Quantity"
-              placeholder="Enter..."
+              placeholder={bookData?.Quantity}
               onChange={handleChange}
             />
           </div>
+          {/* Publish_date Input */}
           <div className="form-group mb-3">
             <label htmlFor="Publish_date" className="ml-2" style={{ marginBottom: '20px' }}>
               Publish Date
@@ -112,7 +117,7 @@ function UpdateBook({ params }) {
               value={bookData?.Publish_date || ''}
               id="Publish_date"
               name="Publish_date"
-              placeholder="Enter..."
+              placeholder={bookData?.Publish_date}
               onChange={handleChange}
             />
           </div>
@@ -124,6 +129,5 @@ function UpdateBook({ params }) {
     </>
   );
 }
-
 
 export default UpdateBook;
