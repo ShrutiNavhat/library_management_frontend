@@ -10,7 +10,7 @@ function UpdateMember({ params }) {
   const fetchMemberData = () => {
     axios.get(`http://127.0.0.1:5000/Members/detail/${params.member_id}`)
       .then((response) => {
-        setMemberData(response.data);
+        setMemberData(response.data.data);
       })
       .catch((error) => {
         console.error('Error fetching book data:', error);

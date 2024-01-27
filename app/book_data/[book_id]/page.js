@@ -2,15 +2,20 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-
-
 function UpdateBook({ params }) {
-  const [bookData, setBookData] = useState(null);
+  const [bookData, setBookData] = useState({
+    Book_Id: '',
+    Title: '',
+    Author: '',
+    Isbn_No: '',
+    Quantity: '',
+    Publish_date: ''
+  });
 
   const fetchBookData = () => {
     axios.get(`http://127.0.0.1:5000/books/detail/${params.book_id}`)
       .then((response) => {
-        setBookData(response.data);
+        setBookData(response.data.data);
       })
       .catch((error) => {
         console.error('Error fetching book data:', error);
@@ -28,25 +33,38 @@ function UpdateBook({ params }) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
-    if (bookData) {
-      axios.put(`http://127.0.0.1:5000/books/update/${params.book_id}`, bookData)
-        .then((response) => {
-          console.log('Book updated:', response.data);
-        })
-        .catch((error) => {
-          console.error('Error updating book data:', error);
-        });
-    } else {
-      console.log('No data found for Book_Id:', params.book_id);
-    }
+  
+    const formattedDate = new Date(bookData.Publish_date).toISOString().split('T')[0];
+  
+    const updatedBookData = {
+      ...bookData,
+      Publish_date: formattedDate,
+    };
+  
+    axios.put(`http://127.0.0.1:5000/books/update/${params.book_id}`, updatedBookData)
+      .then((response) => {
+        console.log('Book updated:', response);
+        fetchBookData();  
+      })
+      .catch((error) => {
+        console.error('Error updating book data:', error);
+      });
   };
 
+  const formatDate = (inputDate) => {
+    const date = new Date(inputDate);
+    const year = date.getFullYear().toString().slice(0);
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    
+    return `${year}-${month}-${day}`;
+  };
+
+  
   return (
     <>
       <div className="AddBook">
         <form className="d-flex flex-column mb-3" onSubmit={handleSubmit}>
-          {/* Title Input */}
           <div className="form-group mb-3">
             <label htmlFor="Title" className="ml-2" style={{ marginBottom: '20px' }}>
               Title
@@ -54,14 +72,13 @@ function UpdateBook({ params }) {
             <input
               type="text"
               className="form-control"
-              value={bookData?.Title || ''}
+              value={bookData? bookData.Title : ''}
               id="Title"
               name="Title"
               placeholder={bookData?.Title}
               onChange={handleChange}
             />
           </div>
-          {/* Author Input */}
           <div className="form-group mb-3">
             <label htmlFor="Author" className="ml-2" style={{ marginBottom: '20px' }}>
               Author
@@ -69,14 +86,13 @@ function UpdateBook({ params }) {
             <input
               type="text"
               className="form-control"
-              value={bookData?.Author || ''}
+              value={bookData? bookData.Author : ''}
               id="Author"
               name="Author"
               placeholder={bookData?.Author}
               onChange={handleChange}
             />
           </div>
-          {/* Isbn_No Input */}
           <div className="form-group mb-3">
             <label htmlFor="Isbn_No" className="ml-2" style={{ marginBottom: '20px' }}>
               ISBN No
@@ -84,14 +100,13 @@ function UpdateBook({ params }) {
             <input
               type="text"
               className="form-control"
-              value={bookData?.Isbn_No || ''}
+              value={bookData? bookData.Isbn_No : ''}
               id="Isbn_No"
               name="Isbn_No"
               placeholder={bookData?.Isbn_No}
               onChange={handleChange}
             />
           </div>
-          {/* Quantity Input */}
           <div className="form-group mb-3">
             <label htmlFor="Quantity" className="ml-2" style={{ marginBottom: '20px' }}>
               Quantity
@@ -99,14 +114,13 @@ function UpdateBook({ params }) {
             <input
               type="text"
               className="form-control"
-              value={bookData?.Quantity || ''}
+              value={bookData? bookData.Quantity : ''}
               id="Quantity"
               name="Quantity"
               placeholder={bookData?.Quantity}
               onChange={handleChange}
             />
           </div>
-          {/* Publish_date Input */}
           <div className="form-group mb-3">
             <label htmlFor="Publish_date" className="ml-2" style={{ marginBottom: '20px' }}>
               Publish Date
@@ -114,7 +128,7 @@ function UpdateBook({ params }) {
             <input
               type="text"
               className="form-control"
-              value={bookData?.Publish_date || ''}
+              value={bookData ? formatDate(bookData.Publish_date) : ''}
               id="Publish_date"
               name="Publish_date"
               placeholder={bookData?.Publish_date}
